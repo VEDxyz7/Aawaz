@@ -1,100 +1,162 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect, useMemo } from 'react';
 import Header from '@/components/grocery/Header';
 import CategoryGrid from '@/components/grocery/CategoryGrid';
 import ProductGrid from '@/components/grocery/ProductGrid';
+import ProductCarousel from '@/components/grocery/ProductCarousel';
 import AIAssistant from '@/components/ai/AIAssistant';
-import { toast } from 'sonner';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import CartDrawer from '@/components/grocery/CartDrawer';
+import StickyBottomCart from '@/components/grocery/StickyBottomCart';
+import { PRODUCTS, CATEGORIES, COLLECTIONS } from '@/data/products';
+import { searchProducts } from '@/lib/aiEngine';
 
 export default function GroceryDashboard() {
-  const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [cart, setCart] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [aiFilteredProducts, setAiFilteredProducts] = useState(null);
 
+  // Listen for AI events
   useEffect(() => {
-    fetchCategories();
-    fetchProducts();
+    const handleSetCategory = (e) => {
+      setSelectedCategory(e.detail);
+      setAiFilteredProducts(null);
+      setTimeout(() => {
+        document.getElementById('all-products')?.scrollIntoView({ behavior: 'smooth' });
+      }, 200);
+    };
+
+    const handleFilterProducts = (e) => {
+      setAiFilteredProducts(e.detail);
+      setSelectedCategory(null);
+      setTimeout(() => {
+        document.getElementById('all-products')?.scrollIntoView({ behavior: 'smooth' });
+      }, 200);
+    };
+
+    window.addEventListener('ai-set-category', handleSetCategory);
+    window.addEventListener('ai-filter-products', handleFilterProducts);
+
+    return () => {
+      window.removeEventListener('ai-set-category', handleSetCategory);
+      window.removeEventListener('ai-filter-products', handleFilterProducts);
+    };
   }, []);
 
-  useEffect(() => {
+  // Filter products
+  const displayProducts = useMemo(() => {
+    if (aiFilteredProducts) return aiFilteredProducts;
+
+    let products = PRODUCTS;
     if (selectedCategory) {
-      fetchProducts(selectedCategory);
-    } else {
-      fetchProducts();
+      products = products.filter((p) => p.category === selectedCategory);
     }
-  }, [selectedCategory]);
+    if (searchQuery && searchQuery.length > 1) {
+      products = searchProducts(searchQuery);
+    }
+    return products;
+  }, [selectedCategory, searchQuery, aiFilteredProducts]);
 
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get(`${API}/categories`);
-      setCategories(response.data);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-      toast.error('Failed to load categories');
-    }
+  // Get products for collections
+  const collectionProducts = useMemo(() => {
+    return COLLECTIONS.map((c) => ({
+      ...c,
+      products: c.productIds.map((id) => PRODUCTS.find((p) => p.id === id)).filter(Boolean),
+    }));
+  }, []);
+
+  const handleCategorySelect = (catId) => {
+    setSelectedCategory(catId);
+    setAiFilteredProducts(null);
+    setSearchQuery('');
   };
 
-  const fetchProducts = async (category = null) => {
-    try {
-      const url = category ? `${API}/products?category=${category}` : `${API}/products`;
-      const response = await axios.get(url);
-      setProducts(response.data);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      toast.error('Failed to load products');
-    }
-  };
-
-  const addToCart = (product) => {
-    const existingItem = cart.find(item => item.id === product.id);
-    if (existingItem) {
-      setCart(cart.map(item => 
-        item.id === product.id 
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ));
-    } else {
-      setCart([...cart, { ...product, quantity: 1 }]);
-    }
-    toast.success(`${product.name} added to cart`);
-  };
-
-  const filteredProducts = searchQuery
-    ? products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
-    : products;
+  const isFilteredView = selectedCategory || searchQuery.length > 1 || aiFilteredProducts;
 
   return (
-    <div className="app-container min-h-screen">
-      <Header 
-        cart={cart} 
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
-      
-      <main className="max-w-7xl mx-auto px-4 py-6 space-y-8">
-        <CategoryGrid 
-          categories={categories}
+    <div className="min-h-screen bg-gray-50 pb-32">
+      <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+
+      <main className="max-w-7xl mx-auto px-3 md:px-4 py-4 space-y-6">
+        {/* Promotional Banner */}
+        {!isFilteredView && (
+          <div className="bg-gradient-to-r from-yellow-400 to-yellow-300 rounded-2xl p-5 md:p-6 flex items-center justify-between overflow-hidden relative">
+            <div className="relative z-10">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-yellow-900 mb-1">Powered by AI</p>
+              <h2 className="text-xl md:text-2xl font-black text-black leading-tight mb-2">
+                Just say it.<br />Shop in seconds.
+              </h2>
+              <p className="text-xs md:text-sm text-black/80 font-medium">
+                Tap the sparkle button → Speak naturally → AAWAZ shops for you
+              </p>
+            </div>
+            <div className="absolute -right-4 top-1/2 -translate-y-1/2 opacity-20 text-9xl">✨</div>
+          </div>
+        )}
+
+        {/* Categories */}
+        <CategoryGrid
+          categories={CATEGORIES}
           selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
+          onSelectCategory={handleCategorySelect}
         />
-        
-        <div>
-          <h2 className="text-2xl font-bold mb-4 text-gray-900">
-            {selectedCategory ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}` : 'All Products'}
-          </h2>
-          <ProductGrid 
-            products={filteredProducts}
-            onAddToCart={addToCart}
-          />
-        </div>
+
+        {/* AI Filtered or Filtered View */}
+        {isFilteredView ? (
+          <div id="all-products" className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <div>
+                <h2 className="text-lg md:text-xl font-bold text-gray-900">
+                  {aiFilteredProducts
+                    ? '✨ AI Curated for You'
+                    : searchQuery
+                    ? `Results for "${searchQuery}"`
+                    : CATEGORIES.find((c) => c.id === selectedCategory)?.name || 'Products'}
+                </h2>
+                <p className="text-xs text-gray-500 mt-0.5">{displayProducts.length} products</p>
+              </div>
+              {(selectedCategory || aiFilteredProducts) && (
+                <button
+                  onClick={() => {
+                    setSelectedCategory(null);
+                    setAiFilteredProducts(null);
+                    setSearchQuery('');
+                  }}
+                  data-testid="clear-filters"
+                  className="text-xs font-semibold text-yellow-700 hover:text-yellow-800"
+                >
+                  Clear filters
+                </button>
+              )}
+            </div>
+            <ProductGrid products={displayProducts} />
+          </div>
+        ) : (
+          <>
+            {/* Collections */}
+            {collectionProducts.map((collection) => (
+              <ProductCarousel
+                key={collection.id}
+                id={collection.id}
+                title={collection.title}
+                subtitle={collection.subtitle}
+                products={collection.products}
+              />
+            ))}
+
+            {/* All Products */}
+            <div id="all-products" className="space-y-3">
+              <div className="px-1">
+                <h2 className="text-lg md:text-xl font-bold text-gray-900">Shop Everything</h2>
+                <p className="text-xs text-gray-500 mt-0.5">All {PRODUCTS.length} products</p>
+              </div>
+              <ProductGrid products={PRODUCTS} />
+            </div>
+          </>
+        )}
       </main>
 
       <AIAssistant />
+      <CartDrawer />
+      <StickyBottomCart />
     </div>
   );
 }
