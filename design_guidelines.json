@@ -1,0 +1,107 @@
+{
+  "theme": "light",
+  "archetype": "4 (Swiss & High-Contrast) + E-commerce",
+  "design_philosophy": "A clean, dense, grocery-first interface (Blinkit) superimposed with a futuristic, multimodal generative AI layer (AAWAZ). Fast scanning, minimal friction, combined with expressive, glowing, animated AI overlays for conversational commerce.",
+  "colors": {
+    "primary": "#F8CB46",
+    "primary_hover": "#E5B832",
+    "background": "#F4F6F9",
+    "surface": "#FFFFFF",
+    "text_primary": "#1C1C1C",
+    "text_secondary": "#666666",
+    "border": "#E2E8F0",
+    "ai_overlay_bg": "rgba(10, 10, 10, 0.85)",
+    "ai_glow": "#FFD700",
+    "ai_accent": "#FFFFFF"
+  },
+  "typography": {
+    "heading_font": "Outfit",
+    "body_font": "Figtree",
+    "hierarchy": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tight font-black",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-bold",
+      "h3": "text-xl sm:text-2xl font-semibold",
+      "h4": "text-lg font-semibold",
+      "body": "text-base leading-relaxed text-gray-800",
+      "small": "text-sm text-gray-500",
+      "tiny_label": "text-xs uppercase tracking-widest font-bold text-gray-400"
+    }
+  },
+  "spacing_and_layout": {
+    "philosophy": "Dense but clean information hierarchy, mobile-first.",
+    "container_padding": "p-4 md:p-6",
+    "grid_gaps": "gap-4 md:gap-6",
+    "border_radius": {
+      "cards": "rounded-2xl",
+      "buttons": "rounded-full",
+      "search_bar": "rounded-full",
+      "ai_elements": "rounded-3xl"
+    },
+    "layout_modes": {
+      "grocery_grid": "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4",
+      "ai_overlay": "fixed inset-0 z-50 pointer-events-none"
+    }
+  },
+  "components": {
+    "headers": {
+      "style": "sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100",
+      "details": "Must include location selector (left), search bar (center/expanded), and cart (right). Yellow accent for cart."
+    },
+    "product_cards": {
+      "style": "bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between h-full p-3 rounded-2xl",
+      "details": "Image on top, tiny delivery ETA badge, price, and a distinct 'ADD' button. Small typography for weights."
+    },
+    "buttons": {
+      "primary": "bg-[#F8CB46] text-black font-semibold hover:bg-[#E5B832] transition-colors rounded-lg px-4 py-2",
+      "ai_floating_mic": "fixed bottom-6 right-6 h-16 w-16 bg-black rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(248,203,70,0.4)] border border-gray-800 hover:scale-105 transition-transform z-50 cursor-pointer pointer-events-auto",
+      "add_to_cart": "border border-green-600 text-green-700 bg-green-50 hover:bg-green-100 px-3 py-1 rounded text-sm font-bold w-full mt-2 text-center"
+    },
+    "ai_layer": {
+      "waveform": "Animated glowing yellow/white svg or div bars. Use framer-motion.",
+      "glass_panel": "backdrop-blur-2xl bg-black/60 border border-white/10 rounded-3xl p-6 text-white shadow-2xl pointer-events-auto",
+      "highlights": "ring-2 ring-[#F8CB46] ring-offset-2 animate-pulse",
+      "arrows": "SVG animated dasharray to draw attention to UI elements."
+    }
+  },
+  "motion_and_interactions": {
+    "hover_states": "-translate-y-1 for product cards, color darkening for buttons.",
+    "ai_listening": "Pulse animation on the mic button, waveform expanding.",
+    "ai_navigating": "Screen auto-scrolls to section, target element gets a glowing ring.",
+    "page_transitions": "Fast, minimal layout shifts."
+  },
+  "media": {
+    "hero_background": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/90647187-b808-4581-9bf7-b93a4ff7068b/images/9858b7757e0b11250f373efa1f109f24b12a0689186a126e236f1907fca29e89.png",
+      "description": "Abstract futuristic voice waveform glowing yellow and white on dark black background",
+      "usage": "Use as background for AI Assistant showcase section or overlay."
+    },
+    "hero_shopping": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/90647187-b808-4581-9bf7-b93a4ff7068b/images/efb519a79d69430ccc6e46f5664c6e832459fccf7cdc26fd22fbfb33c3530347.png",
+      "description": "Person holding smartphone using voice AI assistant",
+      "usage": "Landing page hero image showing the AAWAZ concept."
+    },
+    "products_vegetables": [
+      "https://images.pexels.com/photos/12765459/pexels-photo-12765459.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzF8MHwxfHNlYXJjaHwzfHxmcmVzaCUyMHZlZ2V0YWJsZXMlMjBncm9jZXJ5fGVufDB8fHx8MTc3OTk1NjQyN3ww&ixlib=rb-4.1.0&q=85",
+      "https://images.pexels.com/photos/9705821/pexels-photo-9705821.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "https://images.unsplash.com/photo-1597362925123-77861d3fbac7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzF8MHwxfHNlYXJjaHw0fHxmcmVzaCUyMHZlZ2V0YWJsZXMlMjBncm9jZXJ5fGVufDB8fHx8MTc3OTk1NjQyN3ww&ixlib=rb-4.1.0&q=85"
+    ],
+    "products_snacks": [
+      "https://images.unsplash.com/photo-1688217170693-e821c6e18d72?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHwxfHxzbmFja3MlMjBjaGlwcyUyMGdyb2Nlcnl8ZW58MHx8fHwxNzc5OTU2NDI3fDA&ixlib=rb-4.1.0&q=85",
+      "https://images.unsplash.com/photo-1549482218-02ef268be586?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHw0fHxzbmFja3MlMjBjaGlwcyUyMGdyb2Nlcnl8ZW58MHx8fHwxNzc5OTU2NDI3fDA&ixlib=rb-4.1.0&q=85",
+      "https://images.unsplash.com/photo-1641652682537-e1a9334f206d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHwzfHxzbmFja3MlMjBjaGlwcyUyMGdyb2Nlcnl8ZW58MHx8fHwxNzc5OTU2NDI3fDA&ixlib=rb-4.1.0&q=85",
+      "https://images.unsplash.com/photo-1614907634002-65ac4cb74acb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHwyfHxzbmFja3MlMjBjaGlwcyUyMGdyb2Nlcnl8ZW58MHx8fHwxNzc5OTU2NDI3fDA&ixlib=rb-4.1.0&q=85"
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Use Lucide-react for standard icons.",
+    "Implement the UI primarily using Tailwind CSS and raw HTML div structures to match the exact spacing constraints of the Blinkit-style dense grid.",
+    "Use Shadcn components for complex interactive state (Dropdowns, Dialogs) but strip their default Vercel-like styles to fit this light, friendly yellow theme.",
+    "Include a floating AI mic button (AAWAZ) across the app that triggers an interactive AI state overlay (black translucent, glassmorphism, glowing waveforms).",
+    "Add data-testid to ALL interactive elements for testing (e.g., data-testid='add-to-cart-button', data-testid='ai-mic-trigger').",
+    "Use framer-motion for the AI assistant's listening waveforms, highlighting pulses, and smooth transitions.",
+    "Do not use placeholder image services like via.placeholder.com. Use the provided product image URLs in 'media'.",
+    "The typography pair is Outfit (Headings) and Figtree (Body). Do not use Inter.",
+    "For the AI Copilot layer, use a side-panel or floating glassmorphic overlay that presents multimodal conversational elements (speech + UI targeting). It should NOT obscure the entire screen permanently."
+  ]
+}
