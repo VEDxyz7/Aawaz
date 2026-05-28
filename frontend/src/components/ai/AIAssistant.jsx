@@ -261,12 +261,12 @@ export default function AIAssistant() {
 
   return (
     <>
-      {/* Floating AI Mic Button */}
+      {/* Floating AI Mic Button - positioned ABOVE Emergent badge */}
       <motion.button
         data-testid="ai-mic-button"
         onClick={handleMicClick}
         whileTap={{ scale: 0.92 }}
-        className={`fixed bottom-24 right-4 md:bottom-6 md:right-24 h-14 w-14 md:h-16 md:w-16 rounded-full flex items-center justify-center shadow-2xl border-2 z-40 transition-all ${
+        className={`fixed bottom-24 right-4 md:bottom-20 md:right-6 h-14 w-14 md:h-16 md:w-16 rounded-full flex items-center justify-center shadow-2xl border-2 z-50 transition-all ${
           isListening
             ? 'bg-red-500 border-red-600'
             : 'bg-black border-yellow-400 ai-glow'
@@ -377,23 +377,13 @@ export default function AIAssistant() {
               )}
             </div>
 
-            {/* Input Bar */}
-            <div className="px-4 py-3 border-t border-white/10 flex items-center gap-2 flex-shrink-0">
-              <input
-                type="text"
-                value={textInput}
-                onChange={(e) => setTextInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSendText()}
-                placeholder="Type or speak..."
-                data-testid="ai-text-input"
-                className="flex-1 bg-white/10 text-white placeholder-white/40 px-4 py-2.5 rounded-full text-sm focus:bg-white/20 outline-none transition-colors"
-              />
-
+            {/* Input Bar - button on LEFT to avoid Emergent badge on right */}
+            <div className="px-4 py-3 pb-6 border-t border-white/10 flex items-center gap-2 flex-shrink-0">
               {textInput.trim() ? (
                 <button
                   onClick={handleSendText}
                   data-testid="ai-send-button"
-                  className="w-10 h-10 bg-yellow-400 hover:bg-yellow-500 text-black rounded-full flex items-center justify-center transition-colors"
+                  className="w-10 h-10 bg-yellow-400 hover:bg-yellow-500 text-black rounded-full flex items-center justify-center transition-colors flex-shrink-0"
                 >
                   <Send className="w-4 h-4" />
                 </button>
@@ -401,7 +391,7 @@ export default function AIAssistant() {
                 <button
                   onClick={handleMicClick}
                   data-testid="ai-mic-overlay"
-                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors flex-shrink-0 ${
                     isListening
                       ? 'bg-red-500 text-white animate-pulse'
                       : 'bg-yellow-400 hover:bg-yellow-500 text-black'
@@ -410,6 +400,17 @@ export default function AIAssistant() {
                   <Mic className="w-4 h-4" />
                 </button>
               )}
+
+              <input
+                type="text"
+                value={textInput}
+                onChange={(e) => setTextInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSendText()}
+                placeholder="Type or speak..."
+                data-testid="ai-text-input"
+                className="flex-1 bg-white/10 text-white placeholder-white/40 px-4 py-2.5 rounded-full text-sm focus:bg-white/20 outline-none transition-colors"
+                style={{ marginRight: '160px' }}
+              />
             </div>
           </motion.div>
         )}
