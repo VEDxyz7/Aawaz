@@ -2,6 +2,7 @@ import { Plus, Clock, Star, Minus, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCartStore, useAIStore } from '@/store/cartStore';
 import { toast } from 'sonner';
+import { CATEGORY_FALLBACKS } from '@/data/products';
 
 export default function ProductCard({ product, compact = false }) {
   const items = useCartStore((s) => s.items);
@@ -51,7 +52,11 @@ export default function ProductCard({ product, compact = false }) {
           loading="lazy"
           className={`w-full ${compact ? 'h-24' : 'h-28 md:h-32'} object-cover`}
           onError={(e) => {
-            e.target.src = 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400';
+            // Use category-specific fallback to keep imagery relevant
+            const fallback = CATEGORY_FALLBACKS[product.category] || CATEGORY_FALLBACKS.essentials;
+            if (e.target.src !== fallback) {
+              e.target.src = fallback;
+            }
           }}
         />
         {discount > 0 && (
