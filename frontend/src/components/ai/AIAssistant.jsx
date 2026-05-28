@@ -94,6 +94,9 @@ export default function AIAssistant() {
     const parsed = parseIntent(text);
 
     setResponse(parsed.response);
+    if (parsed.language) {
+      useAIStore.getState().setLanguage(parsed.language);
+    }
     setConversationLog((log) => [...log, { role: 'assistant', content: parsed.response }]);
 
     // Execute action
@@ -101,19 +104,20 @@ export default function AIAssistant() {
 
     // Speak response (use browser speech synthesis to save credits)
     if (parsed.response) {
-      speakWithBrowserTTS(parsed.response);
+      speakWithBrowserTTS(parsed.response, parsed.language);
     }
 
     setProcessing(false);
   };
 
-  // Use browser's built-in speech synthesis - FREE
-  const speakWithBrowserTTS = (text) => {
+  // Use browser's built-in speech synthesis with language hint
+  const speakWithBrowserTTS = (text, lang = 'en') => {
     if (!('speechSynthesis' in window)) return;
     try {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-IN';
+      // Use language-specific locale for better pronunciation
+      utterance.lang = lang === 'hi' ? 'hi-IN' : lang === 'gu' ? 'gu-IN' : 'en-IN';
       utterance.rate = 1.05;
       utterance.pitch = 1.05;
       utterance.volume = 0.9;
