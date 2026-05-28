@@ -266,7 +266,7 @@ export default function AIAssistant() {
         data-testid="ai-mic-button"
         onClick={handleMicClick}
         whileTap={{ scale: 0.92 }}
-        className={`fixed bottom-24 right-4 md:bottom-6 md:right-6 h-14 w-14 md:h-16 md:w-16 rounded-full flex items-center justify-center shadow-2xl border-2 z-40 transition-all ${
+        className={`fixed bottom-24 right-4 md:bottom-6 md:right-24 h-14 w-14 md:h-16 md:w-16 rounded-full flex items-center justify-center shadow-2xl border-2 z-40 transition-all ${
           isListening
             ? 'bg-red-500 border-red-600'
             : 'bg-black border-yellow-400 ai-glow'
